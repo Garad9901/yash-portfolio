@@ -76,7 +76,7 @@ export default function Contact() {
     },
     {
       name: "LINKEDIN REGISTRY",
-      value: "om-gawande-linked",
+      value: "yash-garad",
       url: "https://www.linkedin.com/in/yash-garad-23a315255/",
       icon: <LinkedInIcon />,
     },
