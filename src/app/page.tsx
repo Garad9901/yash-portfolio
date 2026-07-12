@@ -99,7 +99,7 @@ export default function Home() {
                 onClick={() => scrollToSection('hero')}
                 className="flex items-center space-x-2 cursor-pointer text-white hover:text-orange-500 transition-colors shrink-0"
               >
-                <Terminal className="w-4 h-4 text-orange-500 animate-pulse" />
+                <img src="/yg_logo_dark.png" alt="YG Logo" className="w-5 h-5 object-contain" />
                 <span className="text-[10px] font-mono font-bold tracking-[0.15em] uppercase hidden sm:inline">
                   YASH_GARAD.SYS
                 </span>

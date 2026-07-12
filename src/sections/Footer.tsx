@@ -25,7 +25,7 @@ export default function Footer() {
         
         {/* Left column: branding + framework */}
         <div className="flex items-center space-x-3 text-left">
-          <Terminal className="w-5 h-5 text-orange-500" />
+          <img src="/yg_logo_dark.png" alt="YG Logo" className="w-6 h-6 object-contain" />
           <div className="space-y-0.5">
             <div className="text-xs font-mono font-bold text-white tracking-widest uppercase">
               YASH_GARAD.SYS

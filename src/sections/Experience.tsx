@@ -44,7 +44,7 @@ const MISSIONS: MissionLog[] = [
   },
   {
     id: "college-leadership",
-    role: "AI Student Representative & Dev Lead",
+    role: "AI Developer Lead & Technical Organizer",
     mission: "St. Vincent Pallotti College of Engineering",
     duration: "Jul 2024 - Present",
     objectives: [

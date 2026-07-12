@@ -31,6 +31,9 @@ export const metadata: Metadata = {
   description: "Spaceship Dashboard & AI Operating System. Specializing in computer vision, NLP, generative AI systems, and predictive risk platforms.",
   keywords: ["Yash Garad", "AI Engineer", "ML Engineer", "Portfolio", "Spaceship OS", "Command Center", "Next.js"],
   authors: [{ name: "Yash Rajesh Garad" }],
+  icons: {
+    icon: "/yg_logo_dark.png",
+  },
   openGraph: {
     title: "Yash Rajesh Garad | Space Command Center OS",
     description: "Spaceship Dashboard & AI Operating System. Specializing in computer vision, NLP, generative AI systems, and predictive risk platforms.",
