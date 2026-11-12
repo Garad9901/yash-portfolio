@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { papers, projects, statusLabel, type PaperStatus } from '@/data/site';
 
 type Sat = {
@@ -16,11 +16,11 @@ type Sat = {
 };
 
 const statusColor: Record<PaperStatus, string> = {
-  'in-preparation': '#8e9bb6',
-  submitted: '#6fe3ff',
-  'under-revision': '#ffa53a',
-  presented: '#7cf2a0',
-  published: '#7cf2a0',
+  'in-preparation': 'var(--st-prep)',
+  submitted: 'var(--st-sub)',
+  'under-revision': 'var(--st-rev)',
+  presented: 'var(--st-pres)',
+  published: 'var(--st-pres)',
 };
 
 const RADII = [128, 192, 256] as const;
@@ -49,7 +49,7 @@ const sats: Sat[] = [
       detail: p.summary,
       href: p.repo,
       linkLabel: 'Open the repository',
-      color: '#6fe3ff',
+      color: 'var(--kraft-ink)',
       shape: 'diamond' as const,
     })),
   ...projects
@@ -62,7 +62,7 @@ const sats: Sat[] = [
       detail: p.summary,
       href: p.repo,
       linkLabel: p.repo ? 'Open the repository' : undefined,
-      color: '#ffa53a',
+      color: 'var(--rust)',
       shape: 'ring' as const,
     })),
 ];
@@ -77,6 +77,15 @@ function place(s: Sat, idx: number, count: number) {
 export default function OrbitMap() {
   const [active, setActive] = useState<Sat | null>(null);
   const [pinned, setPinned] = useState(false);
+  // Hand-drawn "boiling" lines: the pencil wobble redraws in hard steps, only when motion is welcome.
+  const [boil, setBoil] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const update = () => setBoil(!mq.matches);
+    update();
+    mq.addEventListener('change', update);
+    return () => mq.removeEventListener('change', update);
+  }, []);
 
   const byRing = [0, 1, 2].map((r) => sats.filter((s) => s.ring === r));
 
@@ -91,25 +100,28 @@ export default function OrbitMap() {
     <div className={`orbit-wrap${active ? ' engaged' : ''}`}>
       <svg className="orbit-svg" viewBox="0 0 600 600" role="group" aria-label="Map of papers, research code and systems">
         <defs>
-          <radialGradient id="coreGlow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stopColor="#ffa53a" stopOpacity="0.35" />
-            <stop offset="100%" stopColor="#ffa53a" stopOpacity="0" />
-          </radialGradient>
+          <filter id="pencil" x="-5%" y="-5%" width="110%" height="110%">
+            <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="3" result="noise">
+              {boil && <animate attributeName="seed" values="3;8;14;21" dur="0.9s" calcMode="discrete" repeatCount="indefinite" />}
+            </feTurbulence>
+            <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" />
+          </filter>
         </defs>
 
-        {RADII.map((r, i) => (
-          <circle key={r} cx="300" cy="300" r={r} className={`orbit-ring draw-in${i === 1 ? ' dashed' : ''}`} style={{ animationDelay: `${i * 0.18}s` }} />
-        ))}
+        <g filter="url(#pencil)">
+          {RADII.map((r, i) => (
+            <circle key={r} cx="300" cy="300" r={r} className={`orbit-ring draw-in${i === 1 ? ' dashed' : ''}`} style={{ animationDelay: `${i * 0.18}s` }} />
+          ))}
+          <circle cx="300" cy="300" r="52" className="core-pulse" />
+          <circle cx="300" cy="300" r="40" className="orbit-core" />
+        </g>
         {RADII.map((r, i) => (
           <text key={`l${r}`} x="300" y={300 - r - 10} textAnchor="middle" className="orbit-label fade-in" style={{ animationDelay: `${0.6 + i * 0.1}s` }}>
             {RING_NAMES[i]}
           </text>
         ))}
 
-        <circle cx="300" cy="300" r="110" fill="url(#coreGlow)" />
-        <circle cx="300" cy="300" r="40" fill="none" stroke="#ffa53a" strokeOpacity="0.6" className="core-pulse" />
-        <circle cx="300" cy="300" r="40" fill="#0c1322" stroke="#ffa53a" strokeWidth="1.5" />
-        <text x="300" y="309" textAnchor="middle" fill="#e7edf8" style={{ fontFamily: 'var(--display)', fontWeight: 700, fontSize: 26 }}>YG</text>
+        <text x="300" y="309" textAnchor="middle" className="orbit-core-text">YG</text>
 
         {byRing.map((ring, ri) => (
           <g key={ri} className={`spin${ri === 1 ? ' reverse' : ''}`} style={{ ['--period' as string]: PERIODS[ri] }}>
@@ -134,9 +146,9 @@ export default function OrbitMap() {
                 >
                   <circle className="hit" cx={x} cy={y} r="16" />
                   <circle className="halo" cx={x} cy={y} r="12" />
-                  {s.shape === 'dot' && <circle cx={x} cy={y} r="6" fill={s.color} />}
-                  {s.shape === 'diamond' && <rect x={x - 5} y={y - 5} width="10" height="10" fill={s.color} transform={`rotate(45 ${x} ${y})`} />}
-                  {s.shape === 'ring' && <circle cx={x} cy={y} r="6.5" fill="#060a14" stroke={s.color} strokeWidth="2.5" />}
+                  {s.shape === 'dot' && <circle cx={x} cy={y} r="7" style={{ fill: s.color, stroke: 'var(--ink)', strokeWidth: 1.5 }} />}
+                  {s.shape === 'diamond' && <rect x={x - 6} y={y - 6} width="12" height="12" style={{ fill: s.color, stroke: 'var(--ink)', strokeWidth: 1.5 }} transform={`rotate(45 ${x} ${y})`} />}
+                  {s.shape === 'ring' && <circle cx={x} cy={y} r="7" style={{ fill: 'var(--paper)', stroke: s.color, strokeWidth: 3 }} />}
                 </g>
               );
             })}
@@ -169,8 +181,8 @@ export default function OrbitMap() {
         <span><i style={{ background: statusColor.submitted }} />Submitted</span>
         <span><i style={{ background: statusColor['under-revision'] }} />Under revision</span>
         <span><i style={{ background: statusColor.presented }} />Presented</span>
-        <span><i style={{ background: '#6fe3ff', borderRadius: 0, transform: 'rotate(45deg) scale(.85)' }} />Research code</span>
-        <span><i style={{ background: 'transparent', border: '2px solid #ffa53a' }} />System</span>
+        <span><i style={{ background: 'var(--kraft-ink)', borderRadius: 0, transform: 'rotate(45deg) scale(.85)' }} />Research code</span>
+        <span><i style={{ background: 'transparent', border: '3px solid var(--rust)' }} />System</span>
       </div>
     </div>
   );
