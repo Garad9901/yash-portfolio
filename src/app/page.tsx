@@ -1,5 +1,4 @@
 import Nav from '@/components/Nav';
-import Starfield from '@/components/Starfield';
 import OrbitMap from '@/components/OrbitMap';
 import Systems from '@/components/Systems';
 import Contact from '@/components/Contact';
@@ -14,7 +13,10 @@ export const revalidate = 3600;
 
 const stageIndex: Record<PaperStatus, number> = { 'in-preparation': 1, submitted: 2, 'under-revision': 3, presented: 4, published: 4 };
 const stageColor: Record<PaperStatus, string> = {
-  'in-preparation': 'var(--haze)', submitted: 'var(--telemetry)', 'under-revision': 'var(--ignition)', presented: 'var(--go)', published: 'var(--go)',
+  'in-preparation': 'var(--st-prep)', submitted: 'var(--st-sub)', 'under-revision': 'var(--st-rev)', presented: 'var(--st-pres)', published: 'var(--st-pres)',
+};
+const stageText: Record<PaperStatus, string> = {
+  'in-preparation': 'var(--st-prep-text)', submitted: 'var(--st-sub-text)', 'under-revision': 'var(--st-rev-text)', presented: 'var(--st-pres-text)', published: 'var(--st-pres-text)',
 };
 const order: PaperStatus[] = ['published', 'presented', 'under-revision', 'submitted', 'in-preparation'];
 
@@ -47,7 +49,6 @@ export default async function Home() {
 
   return (
     <>
-      <Starfield />
       <Nav />
       <div className="page" id="top">
         {/* Hero */}
@@ -95,7 +96,7 @@ export default async function Home() {
                         <span key={n} style={n <= stageIndex[p.status] ? { background: stageColor[p.status] } : undefined} />
                       ))}
                     </div>
-                    <span className="stage-label" style={{ color: stageColor[p.status] }}>{statusLabel[p.status]}</span>
+                    <span className="stage-label" style={{ color: stageText[p.status] }}>{statusLabel[p.status]}</span>
                   </div>
                   <div>
                     <h3>{p.title}</h3>
