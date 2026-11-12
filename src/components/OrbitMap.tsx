@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { papers, projects, statusLabel, type PaperStatus } from '@/data/site';
 
 type Sat = {
@@ -49,7 +49,7 @@ const sats: Sat[] = [
       detail: p.summary,
       href: p.repo,
       linkLabel: 'Open the repository',
-      color: 'var(--kraft-ink)',
+      color: 'var(--c-research)',
       shape: 'diamond' as const,
     })),
   ...projects
@@ -62,7 +62,7 @@ const sats: Sat[] = [
       detail: p.summary,
       href: p.repo,
       linkLabel: p.repo ? 'Open the repository' : undefined,
-      color: 'var(--rust)',
+      color: 'var(--c-system)',
       shape: 'ring' as const,
     })),
 ];
@@ -77,15 +77,6 @@ function place(s: Sat, idx: number, count: number) {
 export default function OrbitMap() {
   const [active, setActive] = useState<Sat | null>(null);
   const [pinned, setPinned] = useState(false);
-  // Hand-drawn "boiling" lines: the pencil wobble redraws in hard steps, only when motion is welcome.
-  const [boil, setBoil] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const update = () => setBoil(!mq.matches);
-    update();
-    mq.addEventListener('change', update);
-    return () => mq.removeEventListener('change', update);
-  }, []);
 
   const byRing = [0, 1, 2].map((r) => sats.filter((s) => s.ring === r));
 
@@ -99,16 +90,7 @@ export default function OrbitMap() {
   return (
     <div className={`orbit-wrap${active ? ' engaged' : ''}`}>
       <svg className="orbit-svg" viewBox="0 0 600 600" role="group" aria-label="Map of papers, research code and systems">
-        <defs>
-          <filter id="pencil" x="-5%" y="-5%" width="110%" height="110%">
-            <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="3" result="noise">
-              {boil && <animate attributeName="seed" values="3;8;14;21" dur="0.9s" calcMode="discrete" repeatCount="indefinite" />}
-            </feTurbulence>
-            <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" />
-          </filter>
-        </defs>
-
-        <g filter="url(#pencil)">
+        <g>
           {RADII.map((r, i) => (
             <circle key={r} cx="300" cy="300" r={r} className={`orbit-ring draw-in${i === 1 ? ' dashed' : ''}`} style={{ animationDelay: `${i * 0.18}s` }} />
           ))}
@@ -146,9 +128,9 @@ export default function OrbitMap() {
                 >
                   <circle className="hit" cx={x} cy={y} r="16" />
                   <circle className="halo" cx={x} cy={y} r="12" />
-                  {s.shape === 'dot' && <circle cx={x} cy={y} r="7" style={{ fill: s.color, stroke: 'var(--ink)', strokeWidth: 1.5 }} />}
-                  {s.shape === 'diamond' && <rect x={x - 6} y={y - 6} width="12" height="12" style={{ fill: s.color, stroke: 'var(--ink)', strokeWidth: 1.5 }} transform={`rotate(45 ${x} ${y})`} />}
-                  {s.shape === 'ring' && <circle cx={x} cy={y} r="7" style={{ fill: 'var(--paper)', stroke: s.color, strokeWidth: 3 }} />}
+                  {s.shape === 'dot' && <circle cx={x} cy={y} r="8" style={{ fill: s.color, stroke: 'var(--edge)', strokeWidth: 2.5 }} />}
+                  {s.shape === 'diamond' && <rect x={x - 7} y={y - 7} width="14" height="14" style={{ fill: s.color, stroke: 'var(--edge)', strokeWidth: 2.5 }} transform={`rotate(45 ${x} ${y})`} />}
+                  {s.shape === 'ring' && <rect x={x - 8} y={y - 8} width="16" height="16" rx="2" style={{ fill: s.color, stroke: 'var(--edge)', strokeWidth: 2.5 }} />}
                 </g>
               );
             })}
@@ -181,8 +163,8 @@ export default function OrbitMap() {
         <span><i style={{ background: statusColor.submitted }} />Submitted</span>
         <span><i style={{ background: statusColor['under-revision'] }} />Under revision</span>
         <span><i style={{ background: statusColor.presented }} />Presented</span>
-        <span><i style={{ background: 'var(--kraft-ink)', borderRadius: 0, transform: 'rotate(45deg) scale(.85)' }} />Research code</span>
-        <span><i style={{ background: 'transparent', border: '3px solid var(--rust)' }} />System</span>
+        <span><i style={{ background: 'var(--c-research)', borderRadius: 0, transform: 'rotate(45deg) scale(.85)' }} />Research code</span>
+        <span><i style={{ background: 'var(--c-system)', borderRadius: 2 }} />System</span>
       </div>
     </div>
   );
