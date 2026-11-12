@@ -15,9 +15,7 @@ const stageIndex: Record<PaperStatus, number> = { 'in-preparation': 1, submitted
 const stageColor: Record<PaperStatus, string> = {
   'in-preparation': 'var(--st-prep)', submitted: 'var(--st-sub)', 'under-revision': 'var(--st-rev)', presented: 'var(--st-pres)', published: 'var(--st-pres)',
 };
-const stageText: Record<PaperStatus, string> = {
-  'in-preparation': 'var(--st-prep-text)', submitted: 'var(--st-sub-text)', 'under-revision': 'var(--st-rev-text)', presented: 'var(--st-pres-text)', published: 'var(--st-pres-text)',
-};
+
 const order: PaperStatus[] = ['published', 'presented', 'under-revision', 'submitted', 'in-preparation'];
 
 function Authors({ text }: { text: string }) {
@@ -96,7 +94,7 @@ export default async function Home() {
                         <span key={n} style={n <= stageIndex[p.status] ? { background: stageColor[p.status] } : undefined} />
                       ))}
                     </div>
-                    <span className="stage-label" style={{ color: stageText[p.status] }}>{statusLabel[p.status]}</span>
+                    <span className="stage-label" style={{ background: stageColor[p.status] }}>{statusLabel[p.status]}</span>
                   </div>
                   <div>
                     <h3>{p.title}</h3>

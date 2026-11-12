@@ -3,10 +3,10 @@ import localFont from 'next/font/local';
 import { person } from '@/data/site';
 import './globals.css';
 
-// Self-hosted Patrick Hand (SIL Open Font License): no third-party font request at runtime.
-const hand = localFont({
-  src: [{ path: '../fonts/patrick-hand-latin-400-normal.woff2', weight: '400' }],
-  variable: '--font-hand',
+// Self-hosted Archivo variable font, weight and width axes (SIL Open Font License).
+const grotesk = localFont({
+  src: [{ path: '../fonts/archivo-latin-wdth-normal.woff2', weight: '100 900', style: 'normal' }],
+  variable: '--font-grotesk',
   display: 'swap',
 });
 
@@ -36,8 +36,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#FAFAF8' },
-    { media: '(prefers-color-scheme: dark)', color: '#1D1B18' },
+    { media: '(prefers-color-scheme: light)', color: '#F4F2FF' },
+    { media: '(prefers-color-scheme: dark)', color: '#141414' },
   ],
   colorScheme: 'light dark',
 };
@@ -55,7 +55,7 @@ const jsonLd = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={hand.variable} suppressHydrationWarning>
+    <html lang="en" className={grotesk.variable} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeScript }} />
       </head>

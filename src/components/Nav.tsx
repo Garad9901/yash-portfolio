@@ -112,7 +112,7 @@ export default function Nav() {
       </header>
 
       {copied && (
-        <div role="status" style={{ position: 'fixed', bottom: 24, left: '50%', transform: 'translateX(-50%) rotate(-1deg)', zIndex: 60, background: 'var(--note-2)', border: '2px solid var(--ink)', padding: '0.5rem 1.1rem', borderRadius: 'var(--wobble-2)', fontSize: 18 }}>
+        <div role="status" style={{ position: 'fixed', bottom: 24, left: '50%', transform: 'translateX(-50%)', zIndex: 60, background: 'var(--yellow)', color: '#111111', border: '3px solid var(--edge)', boxShadow: 'var(--shadow-sm)', padding: '0.5rem 1.1rem', borderRadius: 'var(--r)', fontSize: 16, fontWeight: 700 }}>
           Email address copied
         </div>
       )}
